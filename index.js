@@ -20,7 +20,6 @@ client.on("qr", (qr) => {
         if (err) return console.error("Gagal buat QR:", err)
         console.log(url)
     })
-    qrcode.generate(qr, { small: true })
 })
 
 client.on("authenticated", () => {
@@ -43,6 +42,7 @@ client.on("message", async message => {
     const userQuestion = capitalizeWords(messageBody)
     if (messageBody) {
         // respon ai code here
+        console.log(messageBody);
         message.reply(`*${userQuestion}* \n\n> bentar tohapokkkk...`)
     } else {
         client.sendMessage(message.from, 'ngomong apa tohapokkkk')
