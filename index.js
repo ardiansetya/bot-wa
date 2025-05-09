@@ -2,6 +2,7 @@ const express = require('express')
 const axios = require('axios')
 const { LocalAuth, Client } = require('whatsapp-web.js')
 const qrcode = require('qrcode-terminal')
+const QRCode = require('qrcode')
 
 
 const app = express()
@@ -15,6 +16,10 @@ const client = new Client({
 })
 
 client.on("qr", (qr) => {
+    QRCode.toDataURL(qr, (err, url) => {
+        if (err) return console.error("Gagal buat QR:", err)
+        console.log(url)
+    })
     qrcode.generate(qr, { small: true })
 })
 
