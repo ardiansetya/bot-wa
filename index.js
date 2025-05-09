@@ -23,21 +23,22 @@ client.on("ready", () => {
     console.log("ready gan!")
 })
 
-// client.on("message", async message => {
-//     const msg = message.body.trim().toLowerCase()
-//     const chatId = message.from
-//     message.reply('mau apa tohapokkkkk', {chatId })
-//     // if (msg === 'halo') {
-//     //     client.sendMessage('halo juga')
-//     // }
-// })
+
+function capitalizeWords(str) {
+    return str.split(' ').map(word =>
+        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join(' ');
+}
 
 client.on("message", async message => {
-    const msg = message.body.trim().toLowerCase()
-    if (msg === 'halo') {
-        message.reply( 'halo juga')
+    const messageBody = message.body.trim().toLowerCase()
+    const userQuestion = capitalizeWords(messageBody)
+    if (messageBody) {
+        // respon ai code here
+        message.reply(`*${userQuestion}* \n\n> bentar tohapokkkk...`)
+    } else {
+        client.sendMessage(message.from, 'ngomong apa tohapokkkk')
     }
-    client.sendMessage(message.from, 'ngomong apa tohapokkkk') 
 })
 client.initialize()
 
