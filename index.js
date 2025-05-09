@@ -8,7 +8,10 @@ const app = express()
 const port = process.env.PORT || 3000
 
 const client = new Client({
-    authStrategy: new LocalAuth({ clientId: 'andriana' })
+    authStrategy: new LocalAuth({ clientId: 'andriana' }),
+    puppeteer: {
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    }
 })
 
 client.on("qr", (qr) => {
