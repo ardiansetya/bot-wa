@@ -23,12 +23,22 @@ client.on("ready", () => {
     console.log("ready gan!")
 })
 
-client.on("message", message => {
-    if (message.body === "woi asu") {
-        message.reply("apa tohapokkkkk")
-    }
-})
+// client.on("message", async message => {
+//     const msg = message.body.trim().toLowerCase()
+//     const chatId = message.from
+//     message.reply('mau apa tohapokkkkk', {chatId })
+//     // if (msg === 'halo') {
+//     //     client.sendMessage('halo juga')
+//     // }
+// })
 
+client.on("message", async message => {
+    const msg = message.body.trim().toLowerCase()
+    if (msg === 'halo') {
+        message.reply( 'halo juga')
+    }
+    client.sendMessage(message.from, 'ngomong apa tohapokkkk') 
+})
 client.initialize()
 
 
