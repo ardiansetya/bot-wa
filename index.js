@@ -68,8 +68,9 @@ client.on("message", async message => {
 
         let botReply = response.data.response.trim()
 
-        // Hapus tag <think> dan </think> jika ada
-        botReply = botReply.replace(/<\/?think>/gi, '').trim()
+        // Hapus seluruh <think>...</think> beserta isinya
+        botReply = botReply.replace(/<think>[\s\S]*?<\/think>/gi, '').trim()
+        console.log(`[USER] ${messageBody}`);
         console.log(`[AI] ${botReply}`)
 
         await message.reply(botReply)
