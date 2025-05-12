@@ -1,8 +1,8 @@
 const express = require('express')
-const axios = require('axios')
 const { LocalAuth, Client } = require('whatsapp-web.js')
 const qrcode = require('qrcode-terminal')
 const QRCode = require('qrcode')
+const axios = require('axios')
 
 
 const app = express()
@@ -16,6 +16,7 @@ const client = new Client({
 })
 
 client.on("qr", (qr) => {
+    qrcode.generate(qr, { small: true })
     QRCode.toDataURL(qr, (err, url) => {
         if (err) return console.error("Gagal buat QR:", err)
         console.log(url)
@@ -37,17 +38,47 @@ function capitalizeWords(str) {
     ).join(' ');
 }
 
+// client.on("message", async message => {
+//     const messageBody = message.body.trim().toLowerCase()
+//     const userQuestion = capitalizeWords(messageBody)
+//     if (messageBody) {
+//         // respon ai code here
+//         console.log({messageBody});
+//         message.reply(`*${userQuestion}* \n\n> bentar tohapokkkk...`)
+//     } else {
+//         client.sendMessage(message.from, 'ngomong apa tohapokkkk')
+//     }
+// })
+
 client.on("message", async message => {
-    const messageBody = message.body.trim().toLowerCase()
-    const userQuestion = capitalizeWords(messageBody)
-    if (messageBody) {
-        // respon ai code here
-        console.log(messageBody);
-        message.reply(`*${userQuestion}* \n\n> bentar tohapokkkk...`)
-    } else {
-        client.sendMessage(message.from, 'ngomong apa tohapokkkk')
+    const messageBody = message.body.trim()
+
+    if (!messageBody) {
+        await client.sendMessage(message.from, 'Ngomong apa tohapokkkk')
+        return
+    }
+
+    try {
+        // Panggil model AI dari Olama (misalnya model 'llama3')
+        const response = await axios.post('http://localhost:11434/api/generate', {
+            model: "deepseek-r1:7b", // atau ganti dengan model lain yang tersedia
+            prompt: messageBody,
+            stream: false
+        })
+
+        let botReply = response.data.response.trim()
+
+        // Hapus tag <think> dan </think> jika ada
+        botReply = botReply.replace(/<\/?think>/gi, '').trim()
+        console.log(`[AI] ${botReply}`)
+
+        await message.reply(botReply)
+    } catch (error) {
+        console.error("Gagal ambil jawaban dari AI:", error.message)
+        await message.reply("Maaf, AI-nya lagi ngambek 😔")
     }
 })
+
 client.initialize()
 
 
